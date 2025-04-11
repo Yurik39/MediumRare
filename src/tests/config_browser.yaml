@@ -1,0 +1,5 @@
+browserType: "chromium"
+context:
+launch:
+  channel: "msedge"
+  headless: False
