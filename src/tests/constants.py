@@ -10,3 +10,13 @@ class TestCheckCountProductsConst:
     BUTTON_PHONES_TEXT = "Phones"
     BUTTON_LAPTOPS_TEXT = "Laptops"
     BUTTON_MONITORS_TEXT = "Monitors"
+
+
+class TestCheckTextSecondProductConst:
+    PRODUCT_NAME_NOKIA = "Nokia"
+    REPEATED_TEXT_NOKIA = "Nokia"
+    PRODUCT_NAME_SONY_VAIO_I5 = "Sony vaio i5"
+    REPEATED_TEXT_SONY = "Sony"
+    PRODUCT_NAME_ASUS = "Asus"
+    REPEATED_TEXT_ASUS = "ASUS"
+    COUNT_REPEATED_TEXT = 2

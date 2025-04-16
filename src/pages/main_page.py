@@ -6,7 +6,7 @@ from gpn_qa_utils.ui.pages.base import BasePage
 from playwright.async_api import Page
 
 from src.helper.URLs import BASE_URL
-from src.tests.constants import TestCheckCountProductsConst
+from src.tests.constants import TestCheckCountProductsConst, TestCheckTextSecondProductConst
 
 
 class MainPage(BasePage):
@@ -22,6 +22,12 @@ class MainPage(BasePage):
                                       allure_name="Кнопка Monitors")
         self.product_card_block = ComponentList(page, strategy="locator", selector=".card-block",
                                                 allure_name="Счетчик карточек товара")
+        self.nokia_product_card = ComponentList(page, strategy="locator", selector=".card-block:has-text('nokia')",
+                                                allure_name="Карточка продукта Nokia")
+        self.sony_product_card = ComponentList(page, strategy="locator", selector=".card-block:has-text('sony')",
+                                               allure_name="Карточка продукта Sony")
+        self.asus_product_card = ComponentList(page, strategy="locator", selector=".card-block:has-text('asus')",
+                                               allure_name="Карточка продукта Asus")
 
     def check_title(self, title: str):
         """Проверяет наличие заголовка {title}
@@ -57,3 +63,15 @@ class MainPage(BasePage):
         """Кликает по категории Monitors"""
         with allure.step("Перейдем в категорию Monitors"):
             self.button_monitors.click()
+
+    def card_block_count_text_repeat(self, product_name, repeated_text):
+        """Считает количество повторений слова в карточке продукта {product_model}
+        :param product_name: имя продукта в карточке
+        :param repeated_text: повторяющийся текст"""
+        with allure.step(f'Проверим повторение текста {repeated_text} в описании товара {product_name}'):
+            product_card = ComponentList(self.page, strategy="locator",
+                                         selector=f'.card-block:has-text("{product_name}")',
+                                         allure_name=f'Карточка продукта {product_name}')
+            text = product_card.get_text()
+            count_word_repeat = text.count(repeated_text)
+            assert count_word_repeat == TestCheckTextSecondProductConst.COUNT_REPEATED_TEXT
