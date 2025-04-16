@@ -22,12 +22,6 @@ class MainPage(BasePage):
                                       allure_name="Кнопка Monitors")
         self.product_card_block = ComponentList(page, strategy="locator", selector=".card-block",
                                                 allure_name="Счетчик карточек товара")
-        self.nokia_product_card = ComponentList(page, strategy="locator", selector=".card-block:has-text('nokia')",
-                                                allure_name="Карточка продукта Nokia")
-        self.sony_product_card = ComponentList(page, strategy="locator", selector=".card-block:has-text('sony')",
-                                               allure_name="Карточка продукта Sony")
-        self.asus_product_card = ComponentList(page, strategy="locator", selector=".card-block:has-text('asus')",
-                                               allure_name="Карточка продукта Asus")
 
     def check_title(self, title: str):
         """Проверяет наличие заголовка {title}
