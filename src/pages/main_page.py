@@ -1,3 +1,5 @@
+import time
+
 import allure
 from gpn_qa_utils.ui.page_factory.button import Button
 from gpn_qa_utils.ui.page_factory.component_list import ComponentList
@@ -5,7 +7,7 @@ from gpn_qa_utils.ui.page_factory.element import Element
 from gpn_qa_utils.ui.pages.base import BasePage
 from playwright.async_api import Page
 
-from src.helper.URLs import BASE_URL
+from src.helper.URLs import BASE_URL, PRODUCT_URL
 from src.tests.constants import TestCheckCountProductsConst, TestCheckTextSecondProductConst
 
 
@@ -21,7 +23,19 @@ class MainPage(BasePage):
         self.button_monitors = Button(page, strategy="locator", selector="//a[@id='itemc' and text() = 'Monitors']",
                                       allure_name="Кнопка Monitors")
         self.product_card_block = ComponentList(page, strategy="locator", selector=".card-block",
-                                                allure_name="Счетчик карточек товара")
+                                                allure_name="Карточка товара")
+        self.product_card_block_image = ComponentList(page, strategy="locator", selector=".card-img-top",
+                                                      allure_name="Изображение карточки товара")
+        self.button_add_to_cart = Button(page, strategy="by_text", value="Add to cart",
+                                         allure_name="Кнопка Add to cart")
+        self.button_cart = Button(page, strategy="locator", selector="//a[@class='nav-link' and text() = 'Cart']",
+                                  allure_name="Кнопка Cart")
+        self.product_name_on_product_page = Element(page, strategy="locator", selector="//h2[@class='name']",
+                                                    allure_name="Наименование товара на странице продукта")
+        self.cart_product_table = Element(page, strategy="locator", selector='.table',
+                                          allure_name='Таблица товаров в корзине')
+        self.button_delete_product_from_cart = Button(page, strategy="by_text", value="Delete",
+                                                      allure_name="Кнопка Delete")
 
     def check_title(self, title: str):
         """Проверяет наличие заголовка {title}
@@ -69,3 +83,49 @@ class MainPage(BasePage):
             text = product_card.get_text()
             count_word_repeat = text.count(repeated_text)
             assert count_word_repeat == TestCheckTextSecondProductConst.COUNT_REPEATED_TEXT
+
+    def click_on_card_block_by_index(self, index: int):
+        """Кликает по карточке продукта с индексом {index}
+        :param index: индекс карточки продукта"""
+        with allure.step(f'Кликнем по карточке продукта с индексом {index}'):
+            self.product_card_block_image.item(item_number=index).check_disabled(False)
+            self.product_card_block_image.item(item_number=index).click()
+
+    def check_product_expected_url(self, product_index: str):
+        """Проверяет соответствие текущего и ожидаемого URL продукта
+        :param product_index: индекс продукта"""
+        current_url = self.browser.get_current_url()
+        expected_url = f'{BASE_URL}{PRODUCT_URL}{product_index}'
+        assert current_url == expected_url
+
+    def click_button_add_to_cart(self):
+        """Кликает по кнопке Add to cart"""
+        self.button_add_to_cart.check_disabled(False)
+        self.button_add_to_cart.click()
+
+    def click_button_cart(self):
+        """Кликает по кнопке перехода в корзину"""
+        self.button_cart.check_disabled(False)
+        self.button_cart.click()
+
+    def check_expected_url(self, expected_url: str):
+        """Проверяет соответствие текущего и ожидаемого URL
+        :param expected_url: ожидаемый URL"""
+        current_url = self.browser.get_current_url()
+        expected_url = f'{BASE_URL}{expected_url}'
+        assert current_url == expected_url
+
+    def check_have_product_in_cart(self, product_name):
+        """Проверяет наличие товара в таблице корзины
+        :param product_name: наименование продукта"""
+        self.cart_product_table.contains_text(product_name)
+
+    def click_button_delete_from_cart(self):
+        """Кликает по кнопке Delete в таблице корзины"""
+        self.button_delete_product_from_cart.click()
+        time.sleep(5)
+
+    def check_not_have_product_in_cart(self, product_name):
+        """Проверяет отсутствие товара в таблице корзины
+        :param product_name: наименование продукта"""
+        self.cart_product_table.not_have_text(product_name)

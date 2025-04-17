@@ -12,6 +12,7 @@ class TestCheckCountProductsConst:
     BUTTON_MONITORS_TEXT = "Monitors"
 
 
+@dataclass
 class TestCheckTextSecondProductConst:
     PRODUCT_NAME_NOKIA = "Nokia"
     REPEATED_TEXT_NOKIA = "Nokia"
@@ -20,3 +21,9 @@ class TestCheckTextSecondProductConst:
     PRODUCT_NAME_ASUS = "Asus"
     REPEATED_TEXT_ASUS = "ASUS"
     COUNT_REPEATED_TEXT = 2
+
+@dataclass
+class TestAddAndRemoveProductsFromCartConst:
+    PRODUCT_CARD_INDEX = 2
+    PRODUCT_INDEX = "3"
+    PRODUCT_NAME = "Nexus 6"
