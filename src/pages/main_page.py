@@ -1,9 +1,8 @@
-import time
-
 import allure
 from gpn_qa_utils.ui.page_factory.button import Button
 from gpn_qa_utils.ui.page_factory.component_list import ComponentList
 from gpn_qa_utils.ui.page_factory.element import Element
+from gpn_qa_utils.ui.page_factory.input import Input
 from gpn_qa_utils.ui.pages.base import BasePage
 from playwright.async_api import Page
 
@@ -36,6 +35,27 @@ class MainPage(BasePage):
                                           allure_name='Таблица товаров в корзине')
         self.button_delete_product_from_cart = Button(page, strategy="by_text", value="Delete",
                                                       allure_name="Кнопка Delete")
+        self.button_place_order = Button(page, strategy="by_role", role="button", value="Place Order",
+                                         allure_name="Кнопка Place Order")
+        self.modal_title_place_order = ComponentList(self.page, strategy="locator",
+                                                     selector=f'.modal-title:has-text("Place order")',
+                                                     allure_name=f'Заголовок модального окна Place order')
+        self.input_field_name = Input(page, strategy="locator", selector="//input[@id='name']",
+                                      allure_name="Поле ввода Name")
+        self.input_field_country = Input(page, strategy="locator", selector="//input[@id='country']",
+                                         allure_name="Поле ввода Country")
+        self.input_field_city = Input(page, strategy="locator", selector="//input[@id='city']",
+                                      allure_name="Поле ввода City")
+        self.input_field_card = Input(page, strategy="locator", selector="//input[@id='card']",
+                                      allure_name="Поле ввода Credit card")
+        self.input_field_month = Input(page, strategy="locator", selector="//input[@id='month']",
+                                       allure_name="Поле ввода Month")
+        self.input_field_year = Input(page, strategy="locator", selector="//input[@id='year']",
+                                      allure_name="Поле ввода Year")
+        self.button_purchase = Button(page, strategy="by_role", role="button", value="Purchase",
+                                      allure_name="Кнопка Purchase")
+        self.purchase_info_panel = Element(page, strategy="locator", selector='.sweet-alert',
+                                           allure_name='Информационная панель о покупке')
 
     def check_title(self, title: str):
         """Проверяет наличие заголовка {title}
@@ -123,9 +143,39 @@ class MainPage(BasePage):
     def click_button_delete_from_cart(self):
         """Кликает по кнопке Delete в таблице корзины"""
         self.button_delete_product_from_cart.click()
-        time.sleep(5)
 
     def check_not_have_product_in_cart(self, product_name):
         """Проверяет отсутствие товара в таблице корзины
         :param product_name: наименование продукта"""
         self.cart_product_table.not_have_text(product_name)
+
+    def click_button_place_order(self):
+        """Кликает по кнопке Place order"""
+        self.button_place_order.click()
+
+    def check_visible_modal_window(self):
+        """Проверяет отображение модального окна Place order"""
+        self.modal_title_place_order.check_visible(False)
+
+    def input_place_order_field(self, name, country, city, credit_card, month, year):
+        """Заполняет поля ввода в модальном окне Place order
+        :param name: Имя покупателя
+        :param country: Страна
+        :param city: Город
+        :param credit_card: номер кредитной карты
+        :param month: Месяц
+        :param year: Год"""
+        self.input_field_name.fill(name)
+        self.input_field_country.fill(country)
+        self.input_field_city.fill(city)
+        self.input_field_card.fill(credit_card)
+        self.input_field_month.fill(month)
+        self.input_field_year.fill(year)
+
+    def click_purchase_button(self, purchase_accepted_text, name):
+        """Кликает по кнопке Purschase, проверяет отображение текста {purchase_accepted_text} и соответсвие поля {name}
+        :param purchase_accepted_text: Текст успешной покупки
+        :param name: Имя покупателя"""
+        self.button_purchase.click()
+        self.purchase_info_panel.contains_text(purchase_accepted_text)
+        self.purchase_info_panel.contains_text(f'Name: {name}')

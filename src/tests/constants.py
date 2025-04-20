@@ -22,8 +22,20 @@ class TestCheckTextSecondProductConst:
     REPEATED_TEXT_ASUS = "ASUS"
     COUNT_REPEATED_TEXT = 2
 
+
 @dataclass
 class TestAddAndRemoveProductsFromCartConst:
     PRODUCT_CARD_INDEX = 2
     PRODUCT_INDEX = "3"
     PRODUCT_NAME = "Nexus 6"
+
+
+@dataclass
+class TestCheckProductDesignConst:
+    NAME = "Ivan"
+    COUNTRY = "Russia"
+    CITY = "Moscow"
+    CREDIT_CARD = "1234-5678-9012-3456"
+    MONTH = "December"
+    YEAR = "2032"
+    PURCHASE_ACCEPTED_TEXT = "Thank you for your purchase!"

@@ -2,7 +2,7 @@ import allure
 
 from src.helper.URLs import CART_URL
 from src.tests.constants import TestCheckCountProductsConst, TestCheckTextSecondProductConst, \
-    TestAddAndRemoveProductsFromCartConst
+    TestAddAndRemoveProductsFromCartConst, TestCheckProductDesignConst
 
 
 @allure.feature("Главная страница")
@@ -46,3 +46,17 @@ class TestMain:
         main_page.check_have_product_in_cart(TestAddAndRemoveProductsFromCartConst.PRODUCT_NAME)
         main_page.click_button_delete_from_cart()
         main_page.check_not_have_product_in_cart(TestAddAndRemoveProductsFromCartConst.PRODUCT_NAME)
+
+    @allure.title("Проверка оформления товара")
+    def test_check_product_design(self, main_page):
+        main_page.open()
+        main_page.click_on_card_block_by_index(TestAddAndRemoveProductsFromCartConst.PRODUCT_CARD_INDEX)
+        main_page.click_button_add_to_cart()
+        main_page.click_button_cart()
+        main_page.click_button_place_order()
+        main_page.check_visible_modal_window()
+        main_page.input_place_order_field(TestCheckProductDesignConst.NAME, TestCheckProductDesignConst.COUNTRY,
+                                          TestCheckProductDesignConst.CITY, TestCheckProductDesignConst.CREDIT_CARD,
+                                          TestCheckProductDesignConst.MONTH, TestCheckProductDesignConst.YEAR)
+        main_page.click_purchase_button(TestCheckProductDesignConst.PURCHASE_ACCEPTED_TEXT,
+                                        TestCheckProductDesignConst.NAME)
